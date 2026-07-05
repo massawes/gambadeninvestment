@@ -312,7 +312,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 </div><!-- .portal-card -->
 
-<div class="footer-note"><?= htmlspecialchars($portal['business_name']) ?> © <?= date('Y') ?> · Tanzania</div>
+<div class="footer-note">
+  <?= htmlspecialchars($portal['business_name']) ?> © <?= date('Y') ?> · Tanzania
+  &nbsp;·&nbsp; <a href="login.php" class="text-white-50">Admin</a>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
