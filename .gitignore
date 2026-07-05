@@ -1,0 +1,4 @@
+# Nothing in this project is excluded from deployment — every PHP/
+# asset file here is needed on InfinityFree. Only OS/editor junk is ignored.
+.DS_Store
+Thumbs.db

@@ -1,0 +1,41 @@
+name: Deploy to InfinityFree
+
+# Pushing to main automatically uploads the whole site to
+# gambadeninvestement.rf.gd via FTP, and writes includes/db_config.php
+# with the real DB password from a GitHub Secret (so the real password
+# never has to live in this repo).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write includes/db_config.php with the real DB password
+        run: |
+          cat > includes/db_config.php <<EOF
+          <?php
+          define('DB_HOST', 'sql202.infinityfree.com');
+          define('DB_NAME', 'if0_42271545_dambaden_db');
+          define('DB_USER', 'if0_42271545');
+          define('DB_PASS', '${{ secrets.DB_PASSWORD }}');
+          EOF
+
+      - name: Upload to InfinityFree via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: ./htdocs/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/.github/**/*
