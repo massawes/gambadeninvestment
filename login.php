@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ingia — Nexor Digital</title>
+<title>Ingia — Gambaden Investment</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <link rel="stylesheet" href="assets/css/style.css">
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="auth-card">
     <div class="text-center mb-4">
       <div class="mx-auto mb-3" style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--nx-primary),var(--nx-accent));display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;"><i class="bi bi-reception-4"></i></div>
-      <h1 class="h4 fw-bold mb-1">NEXOR DIGITAL</h1>
+      <h1 class="h4 fw-bold mb-1">GAMBADEN INVESTMENT</h1>
       <p class="text-secondary small mb-0">Ingia kusimamia mfumo wako wa hotspot</p>
     </div>
 
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </button>
     </form>
 
-    <p class="text-center text-secondary small mt-4 mb-0">© <?= date('Y') ?> Nexor Digital · Tanzania</p>
+    <p class="text-center text-secondary small mt-4 mb-0">© <?= date('Y') ?> Gambaden Investment · Tanzania</p>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

@@ -4,7 +4,6 @@ $totalSites    = count($data['sites']);
 $onlineSites   = count(array_filter($data['sites'], fn($s) => $s['status'] === 'online'));
 $totalDevices  = count($data['devices']);
 $activeBundles = count(array_filter($data['bundles'], fn($b) => $b['status'] === 'active'));
-$monthRevenue  = array_sum(array_column($data['bundles'], 'revenue_month'));
 $monthSales    = array_sum(array_column($data['bundles'], 'sales_month'));
 
 $recentSales = db()->query(
@@ -17,7 +16,7 @@ $recentSales = db()->query(
 ?>
 
 <div class="row g-3 mb-4">
-  <div class="col-6 col-lg-3">
+  <div class="col-6 col-lg-4">
     <div class="nx-card nx-card-body d-flex align-items-center justify-content-between">
       <div>
         <div class="fs-4 fw-bold"><?= $onlineSites ?>/<?= $totalSites ?></div>
@@ -26,7 +25,7 @@ $recentSales = db()->query(
       <div class="nx-stat-icon" style="background:#eef2ff;color:var(--nx-primary);"><i class="bi bi-broadcast"></i></div>
     </div>
   </div>
-  <div class="col-6 col-lg-3">
+  <div class="col-6 col-lg-4">
     <div class="nx-card nx-card-body d-flex align-items-center justify-content-between">
       <div>
         <div class="fs-4 fw-bold"><?= $totalDevices ?></div>
@@ -35,22 +34,13 @@ $recentSales = db()->query(
       <div class="nx-stat-icon" style="background:#e0f2fe;color:#0284c7;"><i class="bi bi-hdd-network"></i></div>
     </div>
   </div>
-  <div class="col-6 col-lg-3">
+  <div class="col-6 col-lg-4">
     <div class="nx-card nx-card-body d-flex align-items-center justify-content-between">
       <div>
         <div class="fs-4 fw-bold"><?= $activeBundles ?></div>
         <div class="text-secondary small">Active Bundles</div>
       </div>
       <div class="nx-stat-icon" style="background:#dcfce7;color:var(--nx-success);"><i class="bi bi-box-seam"></i></div>
-    </div>
-  </div>
-  <div class="col-6 col-lg-3">
-    <div class="nx-card nx-card-body d-flex align-items-center justify-content-between">
-      <div>
-        <div class="fs-4 fw-bold">TZS <?= money($monthRevenue) ?></div>
-        <div class="text-secondary small">Revenue (mwezi huu)</div>
-      </div>
-      <div class="nx-stat-icon" style="background:#fef3c7;color:var(--nx-warning);"><i class="bi bi-cash-coin"></i></div>
     </div>
   </div>
 </div>

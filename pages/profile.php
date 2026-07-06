@@ -1,11 +1,16 @@
 <?php if (!defined('NEXOR_APP')) { http_response_code(403); exit; }
 $profile = $data['profile'];
 $profileMsg = flash('profile_msg');
+$profileMsgError = flash('profile_msg_error');
 $passwordError = flash('password_error');
 ?>
 
 <?php if ($profileMsg): ?>
 <div class="alert alert-success py-2 small"><?= htmlspecialchars($profileMsg) ?></div>
+<?php endif; ?>
+
+<?php if ($profileMsgError): ?>
+<div class="alert alert-danger py-2 small"><?= htmlspecialchars($profileMsgError) ?></div>
 <?php endif; ?>
 
 <div class="nx-card mb-4" style="background:linear-gradient(135deg,var(--nx-primary),var(--nx-accent));color:#fff;">
@@ -43,34 +48,11 @@ $passwordError = flash('password_error');
         </div>
         <div class="mb-3">
           <label class="nx-form-label">Email</label>
-          <input type="email" class="form-control" value="<?= htmlspecialchars($profile['email']) ?>" disabled>
-          <div class="form-text">Email cannot be changed</div>
+          <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($profile['email']) ?>" required>
         </div>
         <div class="mb-3">
           <label class="nx-form-label">Phone Number</label>
           <input type="text" name="phone" class="form-control" value="<?= htmlspecialchars($profile['phone']) ?>">
-        </div>
-
-        <hr>
-        <h6 class="fw-bold mb-2"><i class="bi bi-bank"></i> Withdrawal Account</h6>
-        <div class="alert alert-secondary small">
-          Active account: <strong><?= htmlspecialchars($profile['bank_name']) ?></strong> ·
-          ****<?= htmlspecialchars(substr($profile['account_number'], -4)) ?><br>
-          Changes to an existing withdrawal account require admin approval.
-        </div>
-        <div class="row g-3 mb-3">
-          <div class="col-6">
-            <label class="nx-form-label">Bank Name</label>
-            <select name="bank_name" class="form-select">
-              <?php foreach (['CRDB', 'NMB', 'NBC', 'Equity', 'Exim'] as $bank): ?>
-              <option <?= $bank === $profile['bank_name'] ? 'selected' : '' ?>><?= $bank ?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-          <div class="col-6">
-            <label class="nx-form-label">Account Number</label>
-            <input type="text" name="account_number" class="form-control" value="<?= htmlspecialchars($profile['account_number']) ?>">
-          </div>
         </div>
 
         <button type="submit" class="btn btn-nx-primary"><i class="bi bi-save"></i> Save Profile</button>

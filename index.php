@@ -154,6 +154,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0;
   }
   .footer-note { text-align: center; margin-top: 16px; color: rgba(255,255,255,.5); font-size: 11.5px; letter-spacing: .5px; }
+  .btn-admin-link {
+    display: flex; align-items: center; gap: 6px;
+    margin: 10px auto 0; width: fit-content;
+    padding: 7px 18px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.18);
+    color: rgba(255,255,255,.8);
+    font-size: 12.5px; font-weight: 600;
+    text-decoration: none;
+    transition: background .2s, color .2s;
+  }
+  .btn-admin-link:hover { background: rgba(255,255,255,.16); color: #fff; }
 </style>
 </head>
 <body>
@@ -335,8 +348,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 <div class="footer-note">
   <?= htmlspecialchars($portal['business_name']) ?> © <?= date('Y') ?> · Tanzania
-  &nbsp;·&nbsp; <a href="login.php" class="text-white-50">Admin</a>
 </div>
+<a href="login.php" class="btn-admin-link">
+  <i class="bi bi-shield-lock"></i> Admin
+</a>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

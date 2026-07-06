@@ -104,17 +104,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             break;
 
         case 'save_profile':
-            $pdo->prepare(
-                'UPDATE users SET first_name = ?, last_name = ?, phone = ?, bank_name = ?, account_number = ? WHERE id = ?'
-            )->execute([
-                trim($_POST['first_name'] ?? ''),
-                trim($_POST['last_name'] ?? ''),
-                trim($_POST['phone'] ?? ''),
-                trim($_POST['bank_name'] ?? ''),
-                trim($_POST['account_number'] ?? ''),
-                $userId,
-            ]);
-            flash('profile_msg', 'Wasifu wako umehifadhiwa.');
+            $email = trim($_POST['email'] ?? '');
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                flash('profile_msg_error', 'Email si sahihi.');
+            } else {
+                $pdo->prepare(
+                    'UPDATE users SET first_name = ?, last_name = ?, email = ?, phone = ? WHERE id = ?'
+                )->execute([
+                    trim($_POST['first_name'] ?? ''),
+                    trim($_POST['last_name'] ?? ''),
+                    $email,
+                    trim($_POST['phone'] ?? ''),
+                    $userId,
+                ]);
+                flash('profile_msg', 'Wasifu wako umehifadhiwa.');
+            }
             break;
 
         case 'change_password':
