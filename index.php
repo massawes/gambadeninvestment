@@ -262,7 +262,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
           <div class="small">
             <div>Lipa kwa Lipa Namba:</div>
             <div class="badge btn-nx-primary fs-6 my-1"><?= htmlspecialchars($portal['lipa_number']) ?></div>
-            <div class="text-secondary" style="font-size:11.5px;"><?= htmlspecialchars($portal['business_name']) ?></div>
+            <div class="text-secondary" style="font-size:11.5px;">
+              Jina la Mtandao: <strong>LIPA NUMBER YA VODA</strong><br>
+              Jina la Mtumiaji: <strong>GAMBADEN INVESTMENT</strong>
+            </div>
           </div>
         </div>
 
