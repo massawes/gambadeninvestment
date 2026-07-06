@@ -60,24 +60,18 @@ a { color: var(--nx-accent); }
 }
 
 .nx-sidebar-brand {
-  padding: 22px 20px 18px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  padding: 18px 20px;
   border-bottom: 1px solid var(--nx-border);
 }
 
-.nx-sidebar-brand .logo-mark {
-  width: 34px; height: 34px;
-  border-radius: 9px;
-  background: linear-gradient(135deg, var(--nx-primary), var(--nx-accent));
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-weight: 800; font-size: 17px;
-  flex-shrink: 0;
+.nx-sidebar-brand .brand-logo {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  background: #fff;
+  border-radius: 10px;
+  padding: 6px 10px;
 }
-
-.nx-sidebar-brand .brand-name { font-weight: 800; font-size: 16px; color: var(--nx-text); line-height: 1.1; }
-.nx-sidebar-brand .brand-sub  { font-size: 10.5px; color: var(--nx-muted); letter-spacing: .5px; }
 
 .nx-nav { padding: 14px 12px; flex: 1; overflow-y: auto; }
 

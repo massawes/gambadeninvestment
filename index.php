@@ -172,8 +172,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 <body>
 
 <div class="portal-header">
-  <span class="wifi-pulse">📶</span>
-  <h1 class="fw-bold fs-3 mt-2 mb-1"><?= htmlspecialchars($portal['business_name']) ?></h1>
+  <img src="assets/img/logo.png" alt="Gambaden Investment" style="max-width:200px;width:100%;height:auto;background:#fff;border-radius:12px;padding:8px 14px;">
+  <h1 class="fw-bold fs-3 mt-3 mb-1"><?= htmlspecialchars($portal['business_name']) ?></h1>
   <p class="small opacity-75 mb-0"><?= htmlspecialchars($portal['welcome_text']) ?></p>
 </div>
 
