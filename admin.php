@@ -8,7 +8,7 @@ require __DIR__ . '/includes/config.php';
 require_login();
 
 $page = $_GET['page'] ?? 'dashboard';
-$allowedPages = ['dashboard', 'sites', 'devices', 'bundles', 'portal', 'profile'];
+$allowedPages = ['dashboard', 'sites', 'devices', 'bundles', 'vouchers', 'portal', 'profile'];
 if (!in_array($page, $allowedPages, true)) {
     $page = 'dashboard';
 }
@@ -69,6 +69,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     ->execute([$bundleId, $qty, $bundle['price'] * $qty]);
                 flash('bundle_msg', 'Mauzo yamerekodiwa kikamilifu.');
             }
+            break;
+
+        case 'generate_vouchers':
+            $bundleId = (int) ($_POST['bundle_id'] ?? 0);
+            $qty = max(1, min(100, (int) ($_POST['quantity'] ?? 1)));
+
+            $stmt = $pdo->prepare('SELECT * FROM bundles WHERE id = ?');
+            $stmt->execute([$bundleId]);
+            $bundle = $stmt->fetch();
+
+            if (!$bundle) {
+                flash('voucher_msg', 'Bundle haipatikani.');
+            } else {
+                $slug = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $bundle['name']));
+                $generated = [];
+
+                for ($i = 0; $i < $qty; $i++) {
+                    do {
+                        $code = $slug . '-' . strtoupper(bin2hex(random_bytes(3)));
+                        $exists = $pdo->prepare('SELECT id FROM vouchers WHERE code = ?');
+                        $exists->execute([$code]);
+                    } while ($exists->fetch());
+
+                    $pin = str_pad((string) random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+
+                    $pdo->prepare('INSERT INTO vouchers (bundle_id, code, pin, status) VALUES (?, ?, ?, "unused")')
+                        ->execute([$bundleId, $code, $pin]);
+
+                    $generated[] = ['code' => $code, 'pin' => $pin, 'bundle_name' => $bundle['name']];
+                }
+
+                $pdo->prepare('INSERT INTO sales (bundle_id, quantity, amount, sold_at) VALUES (?, ?, ?, NOW())')
+                    ->execute([$bundleId, $qty, $bundle['price'] * $qty]);
+
+                $_SESSION['generated_vouchers'] = $generated;
+                flash('voucher_msg', "Vocha {$qty} zimetengenezwa kikamilifu.");
+            }
+            break;
+
+        case 'delete_voucher':
+            $pdo->prepare('DELETE FROM vouchers WHERE id = ?')->execute([(int) ($_POST['id'] ?? 0)]);
+            flash('voucher_msg', 'Vocha imefutwa.');
             break;
 
         case 'create_site':
@@ -174,6 +216,7 @@ $pageTitles = [
     'sites'     => ['Sites', 'Simamia maeneo yako ya hotspot'],
     'devices'   => ['Devices', 'Simamia routers na access points'],
     'bundles'   => ['Internet Bundles', 'Configure your hotspot packages and pricing'],
+    'vouchers'  => ['Vouchers', 'Tengeneza na simamia vocha za wateja wako'],
     'portal'    => ['Portal', 'Customize the captive portal your customers see'],
     'profile'   => ['Profile Settings', 'Manage your account information and security'],
 ];

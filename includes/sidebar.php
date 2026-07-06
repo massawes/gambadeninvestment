@@ -12,6 +12,7 @@
       'sites'     => ['bi-broadcast',       'Sites'],
       'devices'   => ['bi-hdd-network',     'Devices'],
       'bundles'   => ['bi-box-seam',        'Bundles'],
+      'vouchers'  => ['bi-ticket-perforated', 'Vouchers'],
       'portal'    => ['bi-palette',         'Portal'],
       'profile'   => ['bi-person',          'Profile'],
     ];

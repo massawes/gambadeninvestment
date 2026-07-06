@@ -56,62 +56,60 @@ $error   = '';
 $success = false;
 $username_used = '';
 
+function duration_to_seconds(int $value, string $unit): int {
+    $perUnit = ['hours' => 3600, 'days' => 86400, 'weeks' => 604800];
+    return $value * ($perUnit[$unit] ?? 86400);
+}
+
 // ---- Handle login form submission ----
+// Vouchers live in our own MariaDB (same DB as the dashboard) — no more
+// dependency on a separate RADIUS server, which InfinityFree can't run.
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'login') {
     $username = trim(strtolower($_POST['username'] ?? ''));
     $password = trim($_POST['password'] ?? '');
 
     if (empty($username) || empty($password)) {
         $error = 'Tafadhali ingiza username na password.';
+    } elseif (!isset($nexorDb)) {
+        $error = '⚠️ Tatizo la mfumo. Jaribu tena baadaye.';
     } else {
-        // Connect to RADIUS MySQL database
         try {
-            $pdo = new PDO(
-                'mysql:host=localhost;dbname=radius;charset=utf8mb4',
-                'radius',
-                'VincentRadius2026!',
-                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-            );
-
-            // Check user exists and password matches
-            $stmt = $pdo->prepare(
-                "SELECT value FROM radcheck 
-                 WHERE username = ? AND attribute = 'User-Password' LIMIT 1"
+            $stmt = $nexorDb->prepare(
+                "SELECT v.*, b.duration_value, b.duration_unit
+                   FROM vouchers v
+                   JOIN bundles b ON b.id = v.bundle_id
+                  WHERE v.code = ? LIMIT 1"
             );
             $stmt->execute([$username]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $voucher = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if (!$row) {
+            $isExpired = $voucher && (
+                $voucher['status'] === 'expired'
+                || ($voucher['expires_at'] && strtotime($voucher['expires_at']) < time())
+            );
+
+            if (!$voucher) {
                 $error = '❌ Username haipatikani. Angalia code yako vizuri.';
-            } elseif ($row['value'] !== $password) {
+            } elseif (!hash_equals($voucher['pin'], $password)) {
                 $error = '❌ Password (PIN) si sahihi. Jaribu tena.';
-            } else {
-                // Check expiry
-                $stmt2 = $pdo->prepare(
-                    "SELECT value FROM radcheck 
-                     WHERE username = ? AND attribute = 'Expiration' LIMIT 1"
-                );
-                $stmt2->execute([$username]);
-                $exp = $stmt2->fetch(PDO::FETCH_ASSOC);
-
-                if ($exp && strtotime($exp['value']) < time()) {
-                    $error = '⏰ Voucher yako imeisha muda wake. Nunua mpya.';
-                } else {
-                    // Log successful auth
-                    $stmt3 = $pdo->prepare(
-                        "INSERT INTO radpostauth (username, pass, reply, authdate) 
-                         VALUES (?, ?, 'Access-Accept', NOW())"
-                    );
-                    $stmt3->execute([$username, $password]);
-
-                    $success = true;
-                    $username_used = $username;
-
-                    // Redirect to success or let EAC200 handle it
-                    $redirect = "http://{$gatewayIp}:2011/portal/success?username={$username}";
+            } elseif ($isExpired) {
+                if ($voucher['status'] !== 'expired') {
+                    $nexorDb->prepare('UPDATE vouchers SET status = "expired" WHERE id = ?')
+                        ->execute([$voucher['id']]);
                 }
+                $error = '⏰ Voucher yako imeisha muda wake. Nunua mpya.';
+            } else {
+                if ($voucher['status'] === 'unused') {
+                    $seconds = duration_to_seconds((int) $voucher['duration_value'], $voucher['duration_unit']);
+                    $nexorDb->prepare(
+                        'UPDATE vouchers SET status = "active", used_at = NOW(),
+                                expires_at = DATE_ADD(NOW(), INTERVAL ? SECOND) WHERE id = ?'
+                    )->execute([$seconds, $voucher['id']]);
+                }
+                $success = true;
+                $username_used = $voucher['code'];
             }
-        } catch (PDOException $e) {
+        } catch (Throwable $e) {
             $error = '⚠️ Tatizo la mfumo. Jaribu tena baadaye.';
         }
     }

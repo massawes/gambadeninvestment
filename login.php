@@ -65,7 +65,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </button>
     </form>
 
-    <p class="text-center text-secondary small mt-4 mb-0">© <?= date('Y') ?> Gambaden Investment · Tanzania</p>
+    <p class="text-center small mt-4 mb-1">
+      <a href="index.php" class="text-decoration-none"><i class="bi bi-arrow-left"></i> Rudi Home</a>
+    </p>
+    <p class="text-center text-secondary small mb-0">© <?= date('Y') ?> Gambaden Investment · Tanzania</p>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

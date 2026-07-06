@@ -70,6 +70,20 @@ CREATE TABLE IF NOT EXISTS sales (
   CONSTRAINT fk_sales_bundle FOREIGN KEY (bundle_id) REFERENCES bundles(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Real client voucher codes the admin generates for customers. The public
+-- captive portal (index.php) checks logins against this table directly.
+CREATE TABLE IF NOT EXISTS vouchers (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  bundle_id  INT NOT NULL,
+  code       VARCHAR(40) NOT NULL UNIQUE,
+  pin        VARCHAR(10) NOT NULL,
+  status     ENUM('unused','active','expired') DEFAULT 'unused',
+  expires_at DATETIME NULL,
+  used_at    DATETIME NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_vouchers_bundle FOREIGN KEY (bundle_id) REFERENCES bundles(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS billing_invoices (
   id           INT AUTO_INCREMENT PRIMARY KEY,
   invoice_no   VARCHAR(30) NOT NULL,
