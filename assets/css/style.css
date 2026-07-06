@@ -72,7 +72,7 @@ a { color: var(--nx-accent); }
   border-radius: 9px;
   background: linear-gradient(135deg, var(--nx-primary), var(--nx-accent));
   display: flex; align-items: center; justify-content: center;
-  color: #fff; font-weight: 800; font-size: 15px;
+  color: #fff; font-weight: 800; font-size: 17px;
   flex-shrink: 0;
 }
 

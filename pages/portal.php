@@ -31,6 +31,10 @@ $portal = $data['portal'];
             <input type="text" name="lipa_number" class="form-control" value="<?= htmlspecialchars($portal['lipa_number']) ?>">
           </div>
         </div>
+        <div class="mb-3">
+          <label class="nx-form-label">Namba ya SMS/WhatsApp (uthibitisho wa malipo)</label>
+          <input type="text" name="contact_phone" class="form-control" placeholder="+255745325531" value="<?= htmlspecialchars($portal['contact_phone'] ?? '') ?>">
+        </div>
         <button type="submit" class="btn btn-nx-primary"><i class="bi bi-save"></i> Save Portal Settings</button>
       </form>
     </div>

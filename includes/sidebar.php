@@ -2,7 +2,7 @@
 <div class="nx-sidebar-backdrop"></div>
 <aside class="nx-sidebar">
   <div class="nx-sidebar-brand">
-    <div class="logo-mark">N</div>
+    <div class="logo-mark"><i class="bi bi-reception-4"></i></div>
     <div>
       <div class="brand-name">NEXOR</div>
       <div class="brand-sub">DIGITAL</div>

@@ -4,7 +4,7 @@ $totalSites    = count($data['sites']);
 $onlineSites   = count(array_filter($data['sites'], fn($s) => $s['status'] === 'online'));
 $totalDevices  = count($data['devices']);
 $activeBundles = count(array_filter($data['bundles'], fn($b) => $b['status'] === 'active'));
-$monthRevenue  = array_sum(array_map(fn($b) => $b['price'] * $b['sales_month'], $data['bundles']));
+$monthRevenue  = array_sum(array_column($data['bundles'], 'revenue_month'));
 $monthSales    = array_sum(array_column($data['bundles'], 'sales_month'));
 ?>
 

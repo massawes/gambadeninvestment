@@ -63,7 +63,12 @@ function bundle_duration_label(array $b): string {
         </div>
       </div>
 
-      <div class="text-success small mb-3"><i class="bi bi-graph-up-arrow"></i> <?= $b['sales_month'] ?> sales this month</div>
+      <div class="text-success small mb-1"><i class="bi bi-graph-up-arrow"></i> <?= $b['sales_month'] ?> sales this month</div>
+      <div class="text-secondary small mb-3">TZS <?= money($b['revenue_month']) ?> revenue this month</div>
+
+      <button class="btn btn-nx-primary btn-sm w-100 mb-2" data-bs-toggle="modal" data-bs-target="#recordSale<?= $b['id'] ?>">
+        <i class="bi bi-plus-circle"></i> Record Sale
+      </button>
 
       <div class="mt-auto d-flex gap-2">
         <button class="btn btn-outline-secondary btn-sm flex-fill" data-bs-toggle="modal" data-bs-target="#editBundle<?= $b['id'] ?>">
@@ -82,6 +87,33 @@ function bundle_duration_label(array $b): string {
           <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i></button>
         </form>
       </div>
+    </div>
+  </div>
+
+  <!-- Record Sale Modal -->
+  <div class="modal fade" id="recordSale<?= $b['id'] ?>" tabindex="-1">
+    <div class="modal-dialog">
+      <form method="POST" class="modal-content">
+        <input type="hidden" name="action" value="record_sale">
+        <input type="hidden" name="bundle_id" value="<?= $b['id'] ?>">
+        <div class="modal-header">
+          <h5 class="modal-title">Rekodi Mauzo — <?= htmlspecialchars($b['name']) ?></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-secondary small">
+            Baada ya mteja kulipa na kuthibitisha (SMS/WhatsApp) na umempa voucher, rekodi mauzo hapa
+            ili yaonekane kwenye Dashboard, Revenue na Analytics papo hapo.
+          </p>
+          <label class="nx-form-label">Idadi Iliyouzwa</label>
+          <input type="number" name="quantity" class="form-control" value="1" min="1" required>
+          <div class="text-secondary small mt-2">Bei ya bundle: TZS <?= money($b['price']) ?> kila moja</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Ghairi</button>
+          <button type="submit" class="btn btn-nx-primary">Rekodi Mauzo</button>
+        </div>
+      </form>
     </div>
   </div>
 

@@ -1,5 +1,6 @@
 <?php if (!defined('NEXOR_APP')) { http_response_code(403); exit; }
 $billing = $data['billing'];
+$isFree = $billing['price'] <= 0;
 ?>
 
 <div class="row g-3 mb-4">
@@ -7,19 +8,21 @@ $billing = $data['billing'];
     <div class="nx-card nx-card-body h-100">
       <div class="text-secondary small mb-1">Mpango wa Sasa</div>
       <div class="fs-3 fw-bold"><?= htmlspecialchars($billing['plan']) ?></div>
-      <div class="text-secondary small">TZS <?= money($billing['price']) ?> / <?= htmlspecialchars($billing['cycle']) ?></div>
+      <div class="text-secondary small">
+        <?= $isFree ? 'Hakuna malipo kwa sasa' : 'TZS ' . money($billing['price']) . ' / ' . htmlspecialchars($billing['cycle']) ?>
+      </div>
     </div>
   </div>
   <div class="col-lg-4">
     <div class="nx-card nx-card-body h-100">
       <div class="text-secondary small mb-1">Kulipa Tena</div>
-      <div class="fs-4 fw-bold"><?= htmlspecialchars($billing['next_renewal']) ?></div>
-      <span class="nx-badge nx-badge-active">Active</span>
+      <div class="fs-4 fw-bold"><?= $billing['next_renewal'] ? htmlspecialchars($billing['next_renewal']) : '—' ?></div>
+      <span class="nx-badge <?= $isFree ? 'nx-badge-warning' : 'nx-badge-active' ?>"><?= $isFree ? 'Free tier' : 'Active' ?></span>
     </div>
   </div>
   <div class="col-lg-4">
     <div class="nx-card nx-card-body h-100 d-flex flex-column justify-content-center">
-      <button class="btn btn-nx-primary" disabled title="Itapatikana pamoja na MySQL/malipo">
+      <button class="btn btn-nx-primary" disabled title="Malipo ya kweli bado hayajaunganishwa">
         <i class="bi bi-arrow-up-circle"></i> Boresha Mpango
       </button>
     </div>
@@ -49,6 +52,9 @@ $billing = $data['billing'];
           <td class="pe-4"><span class="nx-badge nx-badge-active">Paid</span></td>
         </tr>
         <?php endforeach; ?>
+        <?php if (empty($billing['invoices'])): ?>
+        <tr><td colspan="4" class="text-center text-secondary py-4">Hakuna malipo bado kwenye akaunti hii.</td></tr>
+        <?php endif; ?>
       </tbody>
     </table>
   </div>

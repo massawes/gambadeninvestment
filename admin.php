@@ -29,8 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $name  = trim($_POST['name'] ?? '') ?: 'Bundle';
 
             $pdo->prepare(
-                'INSERT INTO bundles (name, duration_value, duration_unit, price, speed, data_limit, status, sales_month)
-                 VALUES (?, ?, ?, ?, ?, ?, "active", 0)'
+                'INSERT INTO bundles (name, duration_value, duration_unit, price, speed, data_limit, status)
+                 VALUES (?, ?, ?, ?, ?, ?, "active")'
             )->execute([
                 $name,
                 $value,
@@ -54,9 +54,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             flash('bundle_msg', 'Bundle imefutwa.');
             break;
 
+        case 'record_sale':
+            $bundleId = (int) ($_POST['bundle_id'] ?? 0);
+            $qty      = max(1, (int) ($_POST['quantity'] ?? 1));
+
+            $stmt = $pdo->prepare('SELECT price FROM bundles WHERE id = ?');
+            $stmt->execute([$bundleId]);
+            $bundle = $stmt->fetch();
+
+            if (!$bundle) {
+                flash('bundle_msg', 'Bundle haipatikani.');
+            } else {
+                $pdo->prepare('INSERT INTO sales (bundle_id, quantity, amount, sold_at) VALUES (?, ?, ?, NOW())')
+                    ->execute([$bundleId, $qty, $bundle['price'] * $qty]);
+                flash('bundle_msg', 'Mauzo yamerekodiwa kikamilifu.');
+            }
+            break;
+
         case 'create_site':
             $pdo->prepare(
-                'INSERT INTO sites (name, location, status, bundles_sold) VALUES (?, ?, "online", 0)'
+                'INSERT INTO sites (name, location, status) VALUES (?, ?, "online")'
             )->execute([
                 trim($_POST['name'] ?? '') ?: 'Site',
                 trim($_POST['location'] ?? ''),
@@ -124,17 +141,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
         case 'save_portal':
             $pdo->prepare(
-                'INSERT INTO portal_settings (id, business_name, welcome_text, primary_color, lipa_number)
-                 VALUES (1, ?, ?, ?, ?)
+                'INSERT INTO portal_settings (id, business_name, welcome_text, primary_color, lipa_number, contact_phone)
+                 VALUES (1, ?, ?, ?, ?, ?)
                  ON DUPLICATE KEY UPDATE business_name = VALUES(business_name),
                                          welcome_text = VALUES(welcome_text),
                                          primary_color = VALUES(primary_color),
-                                         lipa_number = VALUES(lipa_number)'
+                                         lipa_number = VALUES(lipa_number),
+                                         contact_phone = VALUES(contact_phone)'
             )->execute([
                 trim($_POST['business_name'] ?? ''),
                 trim($_POST['welcome_text'] ?? ''),
                 trim($_POST['primary_color'] ?? '#4f46e5'),
                 trim($_POST['lipa_number'] ?? ''),
+                trim($_POST['contact_phone'] ?? ''),
             ]);
             flash('portal_msg', 'Mipangilio ya Portal imehifadhiwa.');
             break;

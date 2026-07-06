@@ -26,7 +26,7 @@ $msg = flash('site_msg');
       <div class="fw-bold"><?= htmlspecialchars($site['name']) ?></div>
       <div class="text-secondary small mb-3"><i class="bi bi-geo-alt"></i> <?= htmlspecialchars($site['location']) ?></div>
       <div class="d-flex justify-content-between align-items-center border-top pt-2">
-        <span class="text-secondary small"><?= $site['bundles_sold'] ?> mauzo</span>
+        <span class="text-secondary small"><i class="bi bi-hdd-network"></i> <?= $site['device_count'] ?> vifaa</span>
         <form method="POST" data-confirm="Una uhakika unataka kufuta site hii?">
           <input type="hidden" name="action" value="delete_site">
           <input type="hidden" name="id" value="<?= $site['id'] ?>">

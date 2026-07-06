@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="auth-page">
   <div class="auth-card">
     <div class="text-center mb-4">
-      <div class="mx-auto mb-3" style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--nx-primary),var(--nx-accent));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:22px;">N</div>
+      <div class="mx-auto mb-3" style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--nx-primary),var(--nx-accent));display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;"><i class="bi bi-reception-4"></i></div>
       <h1 class="h4 fw-bold mb-1">NEXOR DIGITAL</h1>
       <p class="text-secondary small mb-0">Ingia kusimamia mfumo wako wa hotspot</p>
     </div>

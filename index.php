@@ -19,6 +19,7 @@ $portal = [
     'welcome_text'  => 'Internet ya Uhakika · Arusha, Tanzania',
     'primary_color' => '#4f46e5',
     'lipa_number'   => '140197316',
+    'contact_phone' => '+255745325531',
 ];
 $bundles = [];
 $bundleEmojis = ['⚡', '🌟', '🔥', '💎', '👑', '🚀'];
@@ -36,7 +37,16 @@ try {
     }
 
     $bundles = $nexorDb->query(
-        "SELECT * FROM bundles WHERE status = 'active' ORDER BY price ASC"
+        "SELECT b.*, COALESCE(m.qty, 0) AS sales_month
+           FROM bundles b
+           LEFT JOIN (
+                SELECT bundle_id, SUM(quantity) AS qty
+                  FROM sales
+                 WHERE YEAR(sold_at) = YEAR(CURDATE()) AND MONTH(sold_at) = MONTH(CURDATE())
+                 GROUP BY bundle_id
+           ) m ON m.bundle_id = b.id
+          WHERE b.status = 'active'
+          ORDER BY b.price ASC"
     )->fetchAll(PDO::FETCH_ASSOC);
 } catch (Throwable $e) {
     // Dashboard DB not reachable — page still renders with the defaults above.
@@ -245,9 +255,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
           </div>
         </div>
 
+        <?php $waNumber = preg_replace('/[^0-9]/', '', $portal['contact_phone'] ?? ''); ?>
         <div class="d-flex align-items-start gap-2 mb-3">
           <span class="step-num">3</span>
-          <span class="small">Tuma <strong>SMS au WhatsApp</strong> kuthibitisha malipo yako</span>
+          <div class="small">
+            <div>Tuma <strong>SMS au WhatsApp</strong> kuthibitisha malipo yako kwenye:</div>
+            <div class="d-flex flex-wrap gap-2 mt-2">
+              <a class="btn btn-success btn-sm" href="https://wa.me/<?= htmlspecialchars($waNumber) ?>" target="_blank" rel="noopener">
+                <i class="bi bi-whatsapp"></i> WhatsApp <?= htmlspecialchars($portal['contact_phone'] ?? '') ?>
+              </a>
+              <a class="btn btn-outline-secondary btn-sm" href="tel:<?= htmlspecialchars($waNumber) ?>">
+                <i class="bi bi-telephone"></i> Piga Simu
+              </a>
+            </div>
+          </div>
         </div>
 
         <div class="d-flex align-items-start gap-2 mb-3">
@@ -274,7 +295,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
       <div class="nx-form-label text-uppercase"><i class="bi bi-tags"></i> Chagua Package Inayokufaa</div>
       <div class="row g-2">
         <?php
-        $topSales = $bundles ? max(array_column($bundles, 'sales_month')) : 0;
+        $topSales = max(array_merge([0], array_column($bundles, 'sales_month')));
         foreach ($bundles as $i => $b):
             $isPopular = $topSales > 0 && (int) $b['sales_month'] === (int) $topSales;
             $unitLabel = (int) $b['duration_value'] === 1 ? rtrim($b['duration_unit'], 's') : $b['duration_unit'];
