@@ -6,6 +6,14 @@ $totalDevices  = count($data['devices']);
 $activeBundles = count(array_filter($data['bundles'], fn($b) => $b['status'] === 'active'));
 $monthRevenue  = array_sum(array_column($data['bundles'], 'revenue_month'));
 $monthSales    = array_sum(array_column($data['bundles'], 'sales_month'));
+
+$recentSales = db()->query(
+    "SELECT s.*, b.name AS bundle_name
+       FROM sales s
+       JOIN bundles b ON b.id = s.bundle_id
+      ORDER BY s.sold_at DESC
+      LIMIT 5"
+)->fetchAll();
 ?>
 
 <div class="row g-3 mb-4">
@@ -90,20 +98,23 @@ $monthSales    = array_sum(array_column($data['bundles'], 'sales_month'));
 
   <div class="col-lg-5">
     <div class="nx-card nx-card-body h-100">
-      <h6 class="fw-bold mb-3"><i class="bi bi-box-seam"></i> Bundles Zinazouzwa Zaidi</h6>
-      <?php
-      $top = $data['bundles'];
-      usort($top, fn($a, $b) => $b['sales_month'] <=> $a['sales_month']);
-      foreach (array_slice($top, 0, 4) as $b):
-      ?>
+      <h6 class="fw-bold mb-3"><i class="bi bi-clock-history"></i> Mauzo ya Hivi Karibuni</h6>
+      <?php if (empty($recentSales)): ?>
+      <div class="text-center text-secondary small py-4">
+        Bado hakuna mauzo yaliyorekodiwa. Nenda <a href="admin.php?page=bundles">Bundles</a> na bonyeza "Record Sale" baada ya kila mteja kulipa.
+      </div>
+      <?php else: ?>
+      <?php foreach ($recentSales as $s): ?>
       <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
         <div>
-          <div class="fw-semibold small"><?= htmlspecialchars($b['name']) ?></div>
-          <div class="text-secondary" style="font-size:11.5px;">TZS <?= money($b['price']) ?></div>
+          <div class="fw-semibold small"><?= htmlspecialchars($s['bundle_name']) ?> &times; <?= (int) $s['quantity'] ?></div>
+          <div class="text-secondary" style="font-size:11.5px;"><?= date('d M, H:i', strtotime($s['sold_at'])) ?></div>
         </div>
-        <span class="nx-badge nx-badge-active"><?= $b['sales_month'] ?> mauzo</span>
+        <span class="nx-badge nx-badge-active">TZS <?= money($s['amount']) ?></span>
       </div>
       <?php endforeach; ?>
+      <a href="admin.php?page=revenue" class="d-block text-center small mt-3 text-decoration-none">Angalia Mauzo Yote &rarr;</a>
+      <?php endif; ?>
     </div>
   </div>
 </div>
