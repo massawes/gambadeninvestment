@@ -71,8 +71,6 @@ function load_app_data(): array {
           ORDER BY b.id"
     )->fetchAll();
 
-    $invoices = $pdo->query('SELECT * FROM billing_invoices ORDER BY invoice_date DESC')->fetchAll();
-
     $portalStmt = $pdo->query('SELECT * FROM portal_settings WHERE id = 1');
     $portal = $portalStmt->fetch() ?: [
         'business_name' => 'GAMBADEN HOTSPOT',
@@ -97,44 +95,5 @@ function load_app_data(): array {
             'bank_name'    => $user['bank_name'] ?? '',
             'account_number' => $user['account_number'] ?? '',
         ],
-        'billing' => [
-            'plan'         => $user['plan'] ?? 'Free',
-            'price'        => (int) ($user['plan_price'] ?? 0),
-            'cycle'        => $user['billing_cycle'] ?? 'Monthly',
-            'next_renewal' => !empty($user['next_renewal']) ? date('d M Y', strtotime($user['next_renewal'])) : '',
-            'invoices'     => array_map(fn($inv) => [
-                'id' => $inv['invoice_no'],
-                'date' => date('d M Y', strtotime($inv['invoice_date'])),
-                'amount' => (int) $inv['amount'],
-                'status' => $inv['status'],
-            ], $invoices),
-        ],
     ];
-}
-
-// Real sales for the last 7 days (today included), grouped by day.
-// Days with no recorded sales come back as zero — nothing here is mocked.
-function get_weekly_sales(): array {
-    $rows = db()->query(
-        "SELECT DATE(sold_at) AS day, SUM(quantity) AS qty, SUM(amount) AS revenue
-           FROM sales
-          WHERE sold_at >= (CURDATE() - INTERVAL 6 DAY)
-          GROUP BY DATE(sold_at)"
-    )->fetchAll();
-
-    $byDay = [];
-    foreach ($rows as $r) {
-        $byDay[$r['day']] = ['qty' => (int) $r['qty'], 'revenue' => (int) $r['revenue']];
-    }
-
-    $result = [];
-    for ($i = 6; $i >= 0; $i--) {
-        $date = date('Y-m-d', strtotime("-{$i} days"));
-        $result[] = [
-            'label'   => date('D', strtotime($date)),
-            'qty'     => $byDay[$date]['qty'] ?? 0,
-            'revenue' => $byDay[$date]['revenue'] ?? 0,
-        ];
-    }
-    return $result;
 }

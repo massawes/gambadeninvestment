@@ -8,7 +8,7 @@ require __DIR__ . '/includes/config.php';
 require_login();
 
 $page = $_GET['page'] ?? 'dashboard';
-$allowedPages = ['dashboard', 'sites', 'devices', 'bundles', 'portal', 'analytics', 'revenue', 'billing', 'profile'];
+$allowedPages = ['dashboard', 'sites', 'devices', 'bundles', 'portal', 'profile'];
 if (!in_array($page, $allowedPages, true)) {
     $page = 'dashboard';
 }
@@ -171,9 +171,6 @@ $pageTitles = [
     'devices'   => ['Devices', 'Simamia routers na access points'],
     'bundles'   => ['Internet Bundles', 'Configure your hotspot packages and pricing'],
     'portal'    => ['Portal', 'Customize the captive portal your customers see'],
-    'analytics' => ['Analytics', 'Fuatilia matumizi ya mtandao wako'],
-    'revenue'   => ['Revenue', 'Ripoti ya mapato ya biashara yako'],
-    'billing'   => ['Billing', 'Usajili wako wa Nexor Digital'],
     'profile'   => ['Profile Settings', 'Manage your account information and security'],
 ];
 [$pageTitle, $pageSubtitle] = $pageTitles[$page];

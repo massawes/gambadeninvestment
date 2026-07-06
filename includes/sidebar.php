@@ -17,9 +17,6 @@
       'devices'   => ['bi-hdd-network',     'Devices'],
       'bundles'   => ['bi-box-seam',        'Bundles'],
       'portal'    => ['bi-palette',         'Portal'],
-      'analytics' => ['bi-bar-chart-line',  'Analytics'],
-      'revenue'   => ['bi-cash-coin',       'Revenue'],
-      'billing'   => ['bi-credit-card',     'Billing'],
       'profile'   => ['bi-person',          'Profile'],
     ];
     foreach ($nx_links as $key => [$icon, $label]):

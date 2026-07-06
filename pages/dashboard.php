@@ -81,15 +81,15 @@ $recentSales = db()->query(
           </a>
         </div>
         <div class="col-6 col-md-3">
-          <a href="admin.php?page=analytics" class="nx-card nx-card-body text-center text-decoration-none d-block py-3">
-            <i class="bi bi-bar-chart-line fs-4 d-block mb-2" style="color:var(--nx-primary);"></i>
-            <span class="small fw-semibold" style="color:var(--nx-text);">Analytics</span>
+          <a href="admin.php?page=devices" class="nx-card nx-card-body text-center text-decoration-none d-block py-3">
+            <i class="bi bi-hdd-network fs-4 d-block mb-2" style="color:var(--nx-primary);"></i>
+            <span class="small fw-semibold" style="color:var(--nx-text);">Devices</span>
           </a>
         </div>
         <div class="col-6 col-md-3">
-          <a href="admin.php?page=revenue" class="nx-card nx-card-body text-center text-decoration-none d-block py-3">
-            <i class="bi bi-cash-coin fs-4 d-block mb-2" style="color:var(--nx-primary);"></i>
-            <span class="small fw-semibold" style="color:var(--nx-text);">Revenue</span>
+          <a href="admin.php?page=portal" class="nx-card nx-card-body text-center text-decoration-none d-block py-3">
+            <i class="bi bi-palette fs-4 d-block mb-2" style="color:var(--nx-primary);"></i>
+            <span class="small fw-semibold" style="color:var(--nx-text);">Portal</span>
           </a>
         </div>
       </div>
@@ -113,7 +113,6 @@ $recentSales = db()->query(
         <span class="nx-badge nx-badge-active">TZS <?= money($s['amount']) ?></span>
       </div>
       <?php endforeach; ?>
-      <a href="admin.php?page=revenue" class="d-block text-center small mt-3 text-decoration-none">Angalia Mauzo Yote &rarr;</a>
       <?php endif; ?>
     </div>
   </div>
